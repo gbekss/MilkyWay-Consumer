@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import QrScanner from './QRScanner';
 export default function App() {
 
-
+  
   return (
     <View style={styles.container}>
       <QrScanner/>

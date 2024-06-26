@@ -1,6 +1,6 @@
 import "react-native-get-random-values";
 import React, { useState, useEffect } from 'react';
-import { Text, View, Button } from 'react-native';
+import { Text, View, Button, FlatList } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import contract from './MilkChain';
 
@@ -8,7 +8,7 @@ export default function QrScanner() {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [data, setData] = useState('');
-  const [contractData, setContractData] = useState(null);
+  const [contractData, setContractData] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -24,9 +24,21 @@ export default function QrScanner() {
 
     // Recupera i dati dal contratto
     try {
-      const result = await contract.methods.getLot(data).call();
+      const result = await contract.methods.getLot(parseInt(data)).call();
       console.log(result);
-      setContractData(result);
+
+      // Converti i valori BigInt in numeri JavaScript
+      const formattedData = result.map(item => ({
+        name: item[0],
+        supervisor: item[1],
+        completed: item[2],
+        startTime: parseInt(item[3].toString()),
+        endTime: parseInt(item[4].toString()),
+        location: item[5],
+        lotNumber: parseInt(item[6].toString())
+      }));
+
+      setContractData(formattedData);
     } catch (error) {
       console.error("Errore nel recuperare i dati dal contratto: ", error);
     }
@@ -47,17 +59,22 @@ export default function QrScanner() {
       />
       {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
       <Text>Scanned Data: {data}</Text>
-      {contractData && (
-        <View>
-          <Text>Step Name: {contractData[0]}</Text>
-          <Text>Supervisor: {contractData[1]}</Text>
-          <Text>Completed: {contractData[2] ? "Yes" : "No"}</Text>
-          <Text>Start Time: {new Date(contractData[3] * 1000).toLocaleString()}</Text>
-          <Text>End Time: {new Date(contractData[4] * 1000).toLocaleString()}</Text>
-          <Text>Location: {contractData[5]}</Text>
-          <Text>Lot Number: {contractData[6]}</Text>
-        </View>
-      )}
+
+      <FlatList
+        data={contractData}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <View style={{ marginBottom: 10 }}>
+            <Text>Step Name: {item.name}</Text>
+            <Text>Supervisor: {item.supervisor}</Text>
+            <Text>Completed: {item.completed ? "Yes" : "No"}</Text>
+            <Text>Start Time: {new Date(item.startTime * 1000).toLocaleString()}</Text>
+            <Text>End Time: {new Date(item.endTime * 1000).toLocaleString()}</Text>
+            <Text>Location: {item.location}</Text>
+            <Text>Lot Number: {item.lotNumber}</Text>
+          </View>
+        )}
+      />
     </View>
   );
 }

@@ -8,7 +8,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider("http://192.168.0.119:7545
 
 // ABI e indirizzo del contratto
 const contractABI = MilkChainContract.abi;
-const contractAddress = "0x5109edFc21a37DE7d9D1A9F88B6df816588A793c";
+const contractAddress = "0x06f808d8182674ed8ceDF72E88d0890F8b7Cb5aD";
 
 // Crea un'istanza del contract
 const contract = new web3.eth.Contract(contractABI, contractAddress); 

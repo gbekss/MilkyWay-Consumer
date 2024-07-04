@@ -12,16 +12,30 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Questa app necessita dell'accesso alla fotocamera per scansionare i codici QR."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "CAMERA"
+      ],
+      "softwareKeyboardLayoutMode": "pan",
+      "navigationBarColor": "#000000"
+    },
+    "androidNavigationBar": {
+      "backgroundColor": "transparent"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }

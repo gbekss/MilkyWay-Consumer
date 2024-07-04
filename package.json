@@ -9,13 +9,21 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo-google-fonts/inter": "^0.2.3",
+    "@expo-google-fonts/nunito": "^0.2.3",
     "expo": "~51.0.17",
     "expo-barcode-scanner": "^13.0.1",
+    "expo-camera": "~15.0.12",
+    "expo-font": "~12.0.7",
+    "expo-linear-gradient": "~13.0.2",
+    "expo-navigation-bar": "~3.0.6",
+    "expo-splash-screen": "~0.27.5",
     "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
     "react-native": "0.74.2",
     "react-native-get-random-values": "^1.11.0",
     "text-encoding": "^0.7.0",
+    "vector-icons": "^0.1.0",
     "web3": "^4.10.0"
   },
   "devDependencies": {

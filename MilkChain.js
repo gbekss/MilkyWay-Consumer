@@ -4,7 +4,7 @@ import Web3 from 'web3';
 import MilkChainContract from './MilkChain.json';
 
 // Configura Web3
-const web3 = new Web3(new Web3.providers.HttpProvider("http://192.168.1.19:7545"));
+const web3 = new Web3(new Web3.providers.HttpProvider(""));
 
 // ABI e indirizzo del contratto
 const contractABI = MilkChainContract.abi;

@@ -3,6 +3,7 @@
   <a href="https://expo.dev">
     <img src="https://seeklogo.com/images/E/expo-go-app-logo-BBBE394CB8-seeklogo.com.png" height="60">
   </a>
+  &nbsp; &nbsp; &nbsp; 
   <a href="https://reactnative.dev">
    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/512px-React-icon.svg.png" height="60">
   </a>

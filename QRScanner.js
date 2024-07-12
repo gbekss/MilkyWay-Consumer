@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, Button, StyleSheet, Dimensions, StatusBar } from 'react-native';
 import { CameraView, Camera } from "expo-camera";
 
-const { width } = Dimensions.get('window');
-const qrSize = width * 0.7;
-
 export default function QRScanner({ onScan }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);

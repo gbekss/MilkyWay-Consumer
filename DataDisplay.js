@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import "react-native-get-random-values";
+import 'text-encoding';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { Text, View, FlatList, StyleSheet, Platform, TouchableOpacity } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import Web3 from 'web3';
 import { Ionicons } from '@expo/vector-icons';
-import contract from './MilkChain';
 import { Nunito_400Regular, Nunito_700Bold, Nunito_900Black } from '@expo-google-fonts/nunito';
+import { getContract } from './web3';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -23,19 +25,37 @@ export default function DataDisplay({ lotNumber, onScanAgain }) {
     }
     const fetchData = async () => {
       try {
-        const result = await contract.methods.getLot(parseInt(lotNumber)).call();
+        const web3 = new Web3(new Web3.providers.HttpProvider("http://192.168.0.119:7545"));
+        const factoryContract = await getContract(web3, "MilkProcessFactory", "0xB4D7a9990B85a91eb000275AD5Bb2f302Bcf2F06");
+        const processAddresses = await factoryContract.methods.getAllProcesses().call();
 
-        const formattedData = result.map(item => ({
-          name: item[0],
-          supervisor: item[1],
-          completed: item[2],
-          startTime: parseInt(item[3].toString()),
-          endTime: parseInt(item[4].toString()),
-          location: item[5],
-          lotNumber: parseInt(item[6].toString())
-        }));
+        if (processAddresses.length > 0) {
+          // Cerca l'address che ha il numero di lotto corrispondente
+          var foundLotData = null;
 
-        setContractData(formattedData);
+          for (const address of processAddresses) {
+            const processContract = await getContract(web3, 'MilkProcess', address);
+            const result = await processContract.methods.lotNumber().call();
+
+            if(String(result) === lotNumber){
+              foundLotData = await processContract.methods.getSteps().call();
+
+              const formattedData = foundLotData.map(item => ({
+                name: item[0],
+                supervisor: item[1],
+                completed: item[2],
+                startTime: parseInt(item[3].toString()),
+                endTime: parseInt(item[4].toString()),
+                location: item[5],
+                lotNumber: parseInt(item[6].toString())
+              }));
+    
+              setContractData(formattedData);
+              break;
+            }
+          }
+        }
+
       } catch (error) {
         console.error("Errore nel recuperare i dati dal contratto: ", error);
       }
@@ -57,10 +77,12 @@ export default function DataDisplay({ lotNumber, onScanAgain }) {
         <FlatList
           data={contractData}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <View style={{ marginBottom: 10 }}>
               <Text style={styles.regular}>Nome Fase: {item.name}</Text>
-              <Text style={styles.regular}>Supervisore: {item.supervisor}</Text>
+              <Text style={styles.regular}>
+                Supervisore: {index === 1 ? "Sensor for temperature" : item.supervisor}
+              </Text>
               <Text style={styles.regular}>Completato: {item.completed ? "Sì" : "No"}</Text>
               <Text style={styles.regular}>Ora Inizio: {new Date(item.startTime * 1000).toLocaleString()}</Text>
               <Text style={styles.regular}>Ora Fine: {new Date(item.endTime * 1000).toLocaleString()}</Text>

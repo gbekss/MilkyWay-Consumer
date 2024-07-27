@@ -8,6 +8,7 @@ import Web3 from 'web3';
 import { Ionicons } from '@expo/vector-icons';
 import { Nunito_400Regular, Nunito_700Bold, Nunito_900Black } from '@expo-google-fonts/nunito';
 import { getContract } from './web3';
+import Timeline from 'react-native-timeline-flatlist';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -19,6 +20,14 @@ export default function DataDisplay({ lotNumber, onScanAgain }) {
     Nunito_900Black,
   });
 
+  const data = [
+    { time: '09:00', title: 'Event 1', description: 'Event 1 Description' },
+    { time: '10:45', title: 'Event 2', description: 'Event 2 Description' },
+    { time: '12:00', title: 'Event 3', description: 'Event 3 Description' },
+    { time: '14:00', title: 'Event 4', description: 'Event 4 Description' },
+    { time: '16:30', title: 'Event 5', description: 'Event 5 Description' },
+  ];
+
   useEffect(() => {
     if (loaded || error) {
       SplashScreen.hideAsync();
@@ -26,7 +35,7 @@ export default function DataDisplay({ lotNumber, onScanAgain }) {
     const fetchData = async () => {
       try {
         const web3 = new Web3(new Web3.providers.HttpProvider("http://192.168.0.119:7545"));
-        const factoryContract = await getContract(web3, "MilkProcessFactory", "0xB4D7a9990B85a91eb000275AD5Bb2f302Bcf2F06");
+        const factoryContract = await getContract(web3, "MilkProcessFactory", "0xa5E23FF14DA952eb7D84E6531aF208c2BB242677");
         const processAddresses = await factoryContract.methods.getAllProcesses().call();
 
         if (processAddresses.length > 0) {
@@ -37,7 +46,7 @@ export default function DataDisplay({ lotNumber, onScanAgain }) {
             const processContract = await getContract(web3, 'MilkProcess', address);
             const result = await processContract.methods.lotNumber().call();
 
-            if(String(result) === lotNumber){
+            if (String(result) === lotNumber) {
               foundLotData = await processContract.methods.getSteps().call();
 
               const formattedData = foundLotData.map(item => ({
@@ -49,7 +58,7 @@ export default function DataDisplay({ lotNumber, onScanAgain }) {
                 location: item[5],
                 lotNumber: parseInt(item[6].toString())
               }));
-    
+
               setContractData(formattedData);
               break;
             }
@@ -95,6 +104,19 @@ export default function DataDisplay({ lotNumber, onScanAgain }) {
       <TouchableOpacity style={styles.fab} onPress={onScanAgain}>
         <Ionicons name="qr-code" size={24} color="#497DAC" />
       </TouchableOpacity>
+      <Timeline
+        circleSize={20}
+        separator={true}
+        circleColor="red"
+        lineColor="blue"
+        lineWidth={3}
+        data={data}
+        descriptionStyle={styles.descriptionStyle}
+        timeContainerStyle={styles.timeContainerStyle}
+        timeStyle={styles.timeStyle}
+        circleStyle={styles.circleStyle}
+        titleStyle={styles.titleStyle}
+      />
     </View>
   );
 }

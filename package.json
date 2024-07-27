@@ -22,6 +22,7 @@
     "react": "18.2.0",
     "react-native": "0.74.2",
     "react-native-get-random-values": "^1.11.0",
+    "react-native-timeline-flatlist": "^0.8.0",
     "text-encoding": "^0.7.0",
     "vector-icons": "^0.1.0",
     "web3": "^4.10.0"

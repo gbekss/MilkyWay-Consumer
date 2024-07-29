@@ -40,7 +40,7 @@ export default function App() {
 
   return (
     <LinearGradient
-      colors={['#497DAC', '#00BFFF', '#497DAC']}
+      colors={['#137EB0', '#51B2ED']}
       style={styles.gradient}
     >
       <SafeAreaView style={styles.safeArea}>

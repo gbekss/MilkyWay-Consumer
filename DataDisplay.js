@@ -58,7 +58,7 @@ function translateMonth(inputString) {
     const fetchData = async () => {
       try {
         const web3 = new Web3(new Web3.providers.HttpProvider("http://ip_address:7545"));
-        const factoryContract = await getContract(web3, "MilkProcessFactory", "0xBD870AAd7e837BB3330638F5e40d3518739C6879");
+        const factoryContract = await getContract(web3, "MilkProcessFactory", "contract_address");
         const processAddresses = await factoryContract.methods.getAllProcesses().call();
 
         if (processAddresses.length > 0) {
@@ -78,7 +78,7 @@ function translateMonth(inputString) {
 
               const formattedData = foundLotData.map(item => ({
                 title: item["0"],
-                time: Date(parseInt(item["3"]) * 1000).toString().substring(16, 21),
+                time: new Date(parseInt(item["3"]) * 1000).toString().substring(16, 21),
                 description: item["5"]
               }));
 
@@ -130,7 +130,7 @@ function translateMonth(inputString) {
       />
       </View>
       <TouchableOpacity style={styles.fab} onPress={onScanAgain}>
-        <Ionicons name="qr-code" size={24} color="#497DAC" />
+        <Ionicons name="qr-code" size={30} color="#497DAC" />
       </TouchableOpacity>
 
     </View>
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
   fab: {
     position: 'absolute',
     width: 80,
-    height: 56,
+    height: 80,
     alignItems: 'center',
     justifyContent: 'center',
     right: 20,
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   },
   timelineStyle: {
     minWidth: '100%',
-    paddingBottom: 20
+    paddingBottom: 120
   },
   descriptionStyle: {
     fontFamily: Platform.select({
